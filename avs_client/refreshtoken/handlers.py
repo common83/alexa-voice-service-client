@@ -67,4 +67,7 @@ class AmazonAlexaServiceLoginHandler(BaseHTTPRequestHandler):
             self.end_headers()
             refresh_token = response.json()['refresh_token']
             self.wfile.write(bytes('refresh_token: ' + refresh_token, 'utf8'))
+            self.wfile.write(bytes('\n\n ', 'utf8'))
+            access_token = response.json()['access_token']
+            self.wfile.write(bytes('access_token: ' + access_token, 'utf8'))
         return

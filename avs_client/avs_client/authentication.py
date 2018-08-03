@@ -1,5 +1,5 @@
 import json
-
+import urllib
 import requests
 
 from avs_client.avs_client import helpers
@@ -37,9 +37,14 @@ class AlexaVoiceServiceTokenAuthenticator:
         payload = self.oauth2_manager.get_access_token_params(
             refresh_token=self.refresh_token
         )
-        response = requests.post(
-            self.oauth2_manager.access_token_url, json=payload
-        )
+        access_token_head = {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
+        payload = urllib.parse.urlencode(payload)
+        response = requests.request('POST', url=self.oauth2_manager.access_token_url, data=payload,
+                                    headers=access_token_head)
+        # response = requests.post(
+        #     self.oauth2_manager.access_token_url, data=payload, headers=access_token_head
+        # )
+
         response.raise_for_status()
         response_json = json.loads(response.text)
         return response_json['access_token']
